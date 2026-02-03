@@ -1,0 +1,24 @@
+{
+  "name": "course",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lemai1003-cell/project-course.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/lemai1003-cell/project-course/issues"
+  },
+  "homepage": "https://github.com/lemai1003-cell/project-course#readme",
+  "dependencies": {
+    "firebase": "^12.8.0"
+  }
+}

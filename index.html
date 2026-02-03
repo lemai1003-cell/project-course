@@ -9,9 +9,7 @@
         content="Khóa học Business Analyst Banking chuyên sâu với 5 phần học thực chiến, mentor 1-1, thực hành dự án thật và ứng dụng AI để x10 hiệu suất.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -39,7 +37,10 @@
         <div class="hero-bg-overlay"></div>
         <div class="container hero-content">
             <div class="hero-text">
-                <span class="badge">Khóa học BA Banking thực chiến</span>
+                <span class="badge">
+                    <i class="fas fa-chart-line badge-icon"></i>
+                    Khóa học BA Banking thực chiến
+                </span>
                 <h1>ĐÀO TẠO THỰC CHIẾN<br><span class="gradient-text">CAM KẾT CHUẨN ĐẦU RA</span></h1>
                 <p>Lộ trình toàn diện từ tư duy, kiến thức nền tảng, thực chiến dự án ngân hàng đến ứng dụng AI, cơ hội
                     phỏng vấn và làm việc trực tiếp tại doanh nghiệp.</p>
@@ -49,19 +50,33 @@
                 </div>
             </div>
             <div class="hero-image-wrapper">
-                <!-- Image will be injected via CSS or JS dynamically if needed, or placed here -->
+                <!-- Main Hero Image - AI Integration -->
                 <div class="hero-visual">
-                    <div class="glass-card float-1">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Thực chiến</span>
+                    <!-- Main AI Integration Visual -->
+                    <div class="ai-integration-visual">
+                        <div class="holographic-display">
+                            <img src="assets/hero-professional.jpg" alt="Professional BA Banking Team" class="hero-main-image"
+                                 onerror="this.src='assets/hero-professional.png'">
+                        </div>
+                        <div class="tech-elements">
+                            <div class="floating-card card-1">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Thực chiến</span>
+                            </div>
+                            <div class="floating-card card-2">
+                                <i class="fas fa-robot"></i>
+                                <span>Ứng dụng AI</span>
+                            </div>
+                            <div class="floating-card card-3">
+                                <i class="fas fa-university"></i>
+                                <span>Banking</span>
+                            </div>
+                            <div class="floating-card card-4">
+                                <i class="fas fa-brain"></i>
+                                <span>Tư duy</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="glass-card float-2">
-                        <i class="fas fa-robot"></i>
-                        <span>AI Integration</span>
-                    </div>
-                    <!-- Placeholder for Generated Image -->
-                    <img src="assets/hero-illustration.png" alt="BA Banking Illustration" class="hero-img-main"
-                        onerror="this.style.display='none'">
                 </div>
             </div>
         </div>
@@ -75,7 +90,7 @@
                     <h2>VỀ KHÓA HỌC</h2>
                     <p>Chúng tôi cung cấp chương trình đào tạo Business Analyst chuyên sâu trong lĩnh vực Ngân hàng, được xây dựng từ kinh nghiệm thực tế của các chuyên gia.</p>
                     <p>Học viên được đào tạo theo phương pháp thực chiến, ứng dụng AI hiện đại.</p>
-                    <p>Đồng thời có cơ hội phỏng vấn và làm việc trực tiếp tại các doanh nghiệp tuyển dụng trong ngành tài chính – ngân hàng.</p>
+                    <p>Đồng thời có cơ hội phỏng vấn và làm việc trực tiếp tại các doanh nghiệp tuyển dụng trong lĩnh vực ngân hàng.</p>
                     <div class="stats-grid">
                         <div class="stat-item">
                             <h3>500+</h3>
@@ -271,15 +286,18 @@
                 <p>Đăng ký ngay hôm nay để nhận ưu đãi</p>
                 <form class="signup-form">
                     <div class="form-group">
-                        <input type="text" placeholder="Họ và tên" required>
+                        <input type="text" name="name" placeholder="Họ và tên" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" placeholder="Email của bạn" required>
+                        <input type="email" name="email" placeholder="Email của bạn" required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" placeholder="Số điện thoại" required>
+                        <input type="tel" name="phone" placeholder="Số điện thoại" required>
                     </div>
-                    <button type="submit" class="btn-primary full-width">Gửi Đăng Ký</button>
+                    <div class="cta-buttons">
+                        <a href="tel:0909123456" class="btn-secondary">Tư Vấn</a>
+                        <button type="submit" class="btn-primary">Đăng Ký</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -311,6 +329,8 @@
         </div>
     </footer>
 
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="script.js"></script>
 </body>
 

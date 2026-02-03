@@ -1,3 +1,18 @@
+// Firebase Configuration (Compat version)
+const firebaseConfig = {
+  apiKey: "AIzaSyDJsvWI-J9pc-JhzheR_C4xQXhCNbWDnFI",
+  authDomain: "project-course-985d2.firebaseapp.com",
+  projectId: "project-course-985d2",
+  storageBucket: "project-course-985d2.firebasestorage.app",
+  messagingSenderId: "332733702113",
+  appId: "1:332733702113:web:fa1503e178361455d83ca0",
+  measurementId: "G-SG3NJ1FHXG"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 document.addEventListener('DOMContentLoaded', () => {
     // Mobile Menu Toggle
     const mobileBtn = document.querySelector('.mobile-menu-btn');
@@ -28,6 +43,54 @@ document.addEventListener('DOMContentLoaded', () => {
             navbar.classList.remove('scrolled');
         }
     });
+
+    // Form Submission Handler
+    const signupForm = document.querySelector('.signup-form');
+    if (signupForm) {
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = signupForm.querySelector('input[name="name"]').value;
+            const email = signupForm.querySelector('input[name="email"]').value;
+            const phone = signupForm.querySelector('input[name="phone"]').value;
+            
+            const submitBtn = signupForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            console.log('Form submitted:', { name, email, phone }); // Debug log
+            
+            try {
+                // Show loading state
+                submitBtn.textContent = 'Đang gửi...';
+                submitBtn.disabled = true;
+                
+                // Save to Firestore
+                const docRef = await db.collection("registrations").add({
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    source: "website"
+                });
+                
+                console.log("Document written with ID: ", docRef.id); // Debug log
+                
+                // Success message
+                alert('Đăng ký thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.');
+                signupForm.reset();
+                
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert('Có lỗi xảy ra: ' + error.message);
+            } finally {
+                // Reset button
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    } else {
+        console.log('Form not found!'); // Debug log
+    }
 
     // Scroll Reveal Animation
     const observerOptions = {
