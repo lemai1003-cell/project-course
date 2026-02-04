@@ -372,28 +372,26 @@ ul {
     }
 }
 
-/* About & Target Audience Combined Section */
-.about-combined {
+/* About Section */
+.about {
     padding: 100px 0;
     background: #ffffff;
 }
 
-.about-content-combined {
+.about-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: flex-start;
+    gap: 60px;
+    align-items: center;
 }
 
-.course-info-left h2,
-.target-audience-right h2 {
+.about-text h2 {
     font-size: 2.2rem;
     margin-bottom: 25px;
     color: var(--text-main);
 }
 
-.course-info-left p,
-.target-audience-right > p {
+.about-text p {
     color: var(--text-muted);
     font-size: 1.1rem;
     margin-bottom: 20px;
@@ -403,8 +401,8 @@ ul {
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 30px;
+    gap: 30px;
+    margin-top: 40px;
 }
 
 .stat-item {
@@ -428,53 +426,22 @@ ul {
     margin: 0;
 }
 
-/* Target Audience Right Side */
-.audience-list {
-    margin-top: 30px;
-}
-
-.audience-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    margin-bottom: 30px;
-    padding: 20px;
-    background: rgba(79, 70, 229, 0.02);
-    border-radius: 15px;
-    border: 1px solid rgba(79, 70, 229, 0.05);
-    transition: all 0.3s ease;
-}
-
-.audience-item:hover {
-    background: rgba(79, 70, 229, 0.05);
-    border-color: rgba(79, 70, 229, 0.1);
-    transform: translateY(-2px);
-}
-
-.audience-icon-small {
-    width: 50px;
-    height: 50px;
-    background: rgba(79, 70, 229, 0.1);
-    border-radius: 50%;
+.about-image {
+    position: relative;
+    height: 400px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-color);
-    font-size: 1.2rem;
-    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.audience-text h4 {
-    margin-bottom: 8px;
-    font-size: 1.1rem;
-    color: var(--text-main);
-}
-
-.audience-text p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin: 0;
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
 }
 
 /* Features */
@@ -578,10 +545,10 @@ ul {
 }
 
 .timeline-item {
-    padding: 8px 35px;
+    padding: 10px 40px;
     position: relative;
     width: 50%;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .timeline-item:nth-child(odd) {
@@ -613,7 +580,7 @@ ul {
 
 .timeline-content {
     background: var(--bg-card);
-    padding: 25px;
+    padding: 30px;
     border-radius: 15px;
     position: relative;
     border: 1px solid rgba(0, 0, 0, 0.05);
@@ -643,60 +610,6 @@ ul {
 .timeline-content p {
     color: var(--text-muted);
     font-size: 0.95rem;
-}
-
-/* Target Audience Section */
-.target-audience {
-    padding: 100px 0;
-    background: #ffffff;
-}
-
-.audience-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    margin-top: 50px;
-}
-
-.audience-card {
-    background: var(--bg-card);
-    padding: 40px 30px;
-    border-radius: 20px;
-    text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
-}
-
-.audience-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border-color: var(--primary-color);
-}
-
-.audience-icon {
-    width: 70px;
-    height: 70px;
-    background: rgba(79, 70, 229, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary-color);
-    font-size: 1.8rem;
-    margin: 0 auto 25px;
-}
-
-.audience-card h3 {
-    margin-bottom: 15px;
-    font-size: 1.25rem;
-    color: var(--text-main);
-}
-
-.audience-card p {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
 }
 
 /* Team Section */
@@ -995,27 +908,6 @@ footer {
         font-size: 1.8rem;
     }
 
-    .about-content-combined {
-        grid-template-columns: 1fr;
-        gap: 50px;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .audience-item {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-    }
-
-    .audience-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
     .cta-buttons {
         flex-direction: column;
         gap: 10px;
@@ -1066,11 +958,6 @@ footer {
     .stats-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
-    }
-
-    .audience-grid {
-        grid-template-columns: 1fr;
-        gap: 25px;
     }
 }
 
