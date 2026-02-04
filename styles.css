@@ -522,7 +522,7 @@ ul {
 
 /* Curriculum Timeline */
 .curriculum {
-    padding: 100px 0;
+    padding: 80px 0;
     background: #f1f5f9;
 }
 
@@ -530,7 +530,7 @@ ul {
     position: relative;
     max-width: 800px;
     margin: 0 auto;
-    padding: 40px 0;
+    padding: 30px 0;
 }
 
 .timeline::after {
@@ -545,10 +545,10 @@ ul {
 }
 
 .timeline-item {
-    padding: 10px 40px;
+    padding: 8px 35px;
     position: relative;
     width: 50%;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .timeline-item:nth-child(odd) {
@@ -580,7 +580,7 @@ ul {
 
 .timeline-content {
     background: var(--bg-card);
-    padding: 30px;
+    padding: 25px;
     border-radius: 15px;
     position: relative;
     border: 1px solid rgba(0, 0, 0, 0.05);
