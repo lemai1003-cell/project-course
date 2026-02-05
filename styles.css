@@ -132,11 +132,6 @@ section[id] {
     scroll-margin-top: 50px;
 }
 
-/* Special scroll margin for features section */
-#features {
-    scroll-margin-top: 40px;
-}
-
 /* Navbar */
 .navbar {
     position: fixed;
