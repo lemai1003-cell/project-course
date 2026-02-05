@@ -129,7 +129,7 @@ section[id] {
 
 /* Special scroll margin for hero section */
 #home {
-    scroll-margin-top: 80px;
+    scroll-margin-top: 40px;
 }
 
 /* Special scroll margin for course info section */
