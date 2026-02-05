@@ -526,6 +526,24 @@ ul {
     background: #f1f5f9;
 }
 
+.curriculum-image {
+    text-align: center;
+    margin: 30px 0 50px 0;
+}
+
+.roadmap-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.roadmap-image:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
 .timeline {
     position: relative;
     max-width: 800px;
@@ -746,6 +764,16 @@ ul {
     font-size: 0.85rem;
     color: var(--text-muted);
     line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.team-info p:last-child {
+    margin-bottom: 0;
+}
+
+.team-info p strong {
+    color: var(--text-main);
+    font-weight: 600;
 }
 
 /* CTA Section */
