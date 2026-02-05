@@ -124,7 +124,7 @@ ul {
 
 /* Scroll offset for fixed navbar */
 section[id] {
-    scroll-margin-top: 40px;
+    scroll-margin-top: 20px;
 }
 
 /* Navbar */
