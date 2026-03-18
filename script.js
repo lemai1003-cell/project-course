@@ -50,14 +50,16 @@ document.addEventListener('DOMContentLoaded', () => {
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const name = signupForm.querySelector('input[name="name"]').value;
             const email = signupForm.querySelector('input[name="email"]').value;
             const phone = signupForm.querySelector('input[name="phone"]').value;
             
             const submitBtn = signupForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             
-            console.log('Form submitted:', { name, email, phone }); // Debug log
+            // Open new tab
+            window.open('https://test-techcamp.vercel.app/', '_blank');
+            
+            console.log('Form submitted:', { email, phone }); // Debug log
             
             try {
                 // Show loading state
@@ -66,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Save to Firestore
                 const docRef = await db.collection("registrations").add({
-                    name: name,
                     email: email,
                     phone: phone,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -76,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("Document written with ID: ", docRef.id); // Debug log
                 
                 // Success message
-                alert('Đăng ký thành công! Chúng tôi sẽ liên hệ với bạn sớm nhất.');
+                alert('Đăng ký thành công!');
                 signupForm.reset();
                 
             } catch (error) {
