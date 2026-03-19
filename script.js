@@ -144,7 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            window.location.href = `https://test-techcamp.vercel.app/?at_email=${encodeURIComponent(email)}&at_phone=${encodeURIComponent(phone)}`;
+            const url = `https://test-techcamp.vercel.app/?at_email=${encodeURIComponent(email)}&at_phone=${encodeURIComponent(phone)}`;
+            window.open(url, '_blank');
         });
     }
 
