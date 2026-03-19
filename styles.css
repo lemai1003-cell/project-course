@@ -880,6 +880,15 @@ section[id] {
     margin-bottom: 12px;
 }
 
+.login-status-msg {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.05);
+    padding: 6px 14px;
+    border-radius: 50px;
+    border: 1px dashed rgba(0, 0, 0, 0.2);
+}
+
 #googleUserInfo {
     display: flex;
     align-items: center;

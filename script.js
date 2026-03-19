@@ -84,6 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const googleUserEmail    = document.getElementById('googleUserEmail');
     const googleLogoutBtn    = document.getElementById('googleLogoutBtn');
 
+    const loginStatus        = document.getElementById('loginStatus');
+
     window.handleGoogleLoginCTA = (response) => {
         const base64Url = response.credential.split('.')[1];
         const base64   = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -96,9 +98,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Auto-fill email field
         if (emailField) emailField.value = payload.email;
 
-        // Show user badge, hide google button
-        googleBtnContainer.classList.add('hidden');
-        googleUserInfo.classList.remove('hidden');
+        // Cập nhật giao diện: Hiện badge người dùng, ẩn nút google và trạng thái "Chưa đăng nhập"
+        if (googleBtnContainer) googleBtnContainer.classList.add('hidden');
+        if (loginStatus) loginStatus.classList.add('hidden');
+        if (googleUserInfo) googleUserInfo.classList.remove('hidden');
+        
         googleUserAvatar.src = payload.picture;
         googleUserEmail.textContent = payload.email;
     };
@@ -118,8 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (googleLogoutBtn) {
         googleLogoutBtn.addEventListener('click', () => {
-            googleUserInfo.classList.add('hidden');
-            googleBtnContainer.classList.remove('hidden');
+            if (googleUserInfo) googleUserInfo.classList.add('hidden');
+            if (googleBtnContainer) googleBtnContainer.classList.remove('hidden');
+            if (loginStatus) loginStatus.classList.remove('hidden');
+            
             if (emailField) emailField.value = '';
             if (window.google) google.accounts.id.disableAutoSelect();
         });
