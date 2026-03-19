@@ -86,6 +86,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const googleCustomBtn = document.getElementById('googleCustomBtn');
 
+    // LOGIC KIỂM TRA ĐIỀU KIỆN 2 NÚT BẤM (Dùng các biến đã khai báo dòng 74,75)
+    function updateButtonState() {
+        const isEmailOk = emailField && emailField.value.trim() !== "";
+        const isPhoneOk = phoneField && phoneField.value.trim() !== "";
+        
+        if (isEmailOk && isPhoneOk) {
+            if (tuvanBtn) {
+                tuvanBtn.disabled = false;
+                tuvanBtn.style.opacity = "1";
+                tuvanBtn.style.cursor = "pointer";
+            }
+            if (dangkyBtn) {
+                dangkyBtn.disabled = false;
+                dangkyBtn.style.opacity = "1";
+                dangkyBtn.style.cursor = "pointer";
+            }
+        } else {
+            if (tuvanBtn) {
+                tuvanBtn.disabled = true;
+                tuvanBtn.style.opacity = "0.5";
+                tuvanBtn.style.cursor = "not-allowed";
+            }
+            if (dangkyBtn) {
+                dangkyBtn.disabled = true;
+                dangkyBtn.style.opacity = "0.5";
+                dangkyBtn.style.cursor = "not-allowed";
+            }
+        }
+    }
+
+    // Gắn sự kiện cho các ô nhập liệu
+    if (emailField) emailField.addEventListener('input', updateButtonState);
+    if (phoneField) phoneField.addEventListener('input', updateButtonState);
+    
+    // Khởi tạo trạng thái ban đầu (Disable 2 nút)
+    updateButtonState();
+
     window.handleGoogleLoginCTA = (response) => {
         const base64Url = response.credential.split('.')[1];
         const base64   = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -104,6 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         googleUserAvatar.src = payload.picture;
         googleUserEmail.textContent = payload.email;
+        
+        // Cập nhật lại trạng thái nút sau khi login thành công
+        updateButtonState();
     };
 
     setTimeout(() => {
@@ -144,6 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     { theme: "outline", size: "large", shape: "circle", type: "icon" }
                 );
             }
+            // Cập nhật lại sau khi xóa email
+            updateButtonState();
         });
     }
 
