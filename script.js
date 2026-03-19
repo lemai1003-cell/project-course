@@ -7,11 +7,15 @@ const firebaseConfig = {
     messagingSenderId: "332733702113",
     appId: "1:332733702113:web:fa1503e178361455d83ca0",
     measurementId: "G-SG3NJ1FHXG",
-    databaseURL: "https://project-course-985d2-default-rtdb.firebaseio.com/" 
+    databaseURL: "https://project-course-985d2-default-rtdb.asia-southeast1.firebasedatabase.app" // ĐÃ SỬA: Đúng khu vực Singapore/Đông Nam Á
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+    console.log("🔥 Firebase initialized successfully.");
+}
+
 const database = firebase.database();
 const db = firebase.firestore();
 
@@ -26,20 +30,17 @@ async function sendTelegramNotification(email, phone, totalCount) {
         `🔔 Có học viên yêu cầu TƯ VẤN!\n\n` +
         `📧 Email: ${email || 'Chưa nhập'}\n` +
         `📞 SĐT: ${phone || 'Chưa nhập'}\n` +
-        `👥 Tổng yêu cầu: ${totalCount}`;
-    try {
-        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message })
-        });
-    } catch (err) {
-        console.error('Lỗi gửi Telegram:', err);
-    }
+        `👥 Tổng yêu cầu: ${totalCount || '---'}`;
+    
+    // Gửi Telegram không để chặn luồng
+    fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message })
+    }).catch(err => console.error('Telegram Error:', err));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Elements
     const emailField = document.getElementById('emailField');
     const phoneField = document.getElementById('phoneField');
     const tuvanBtn = document.getElementById('tuvan-btn');
@@ -51,22 +52,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const googleLogoutBtn = document.getElementById('googleLogoutBtn');
     const googleCustomBtn = document.getElementById('googleCustomBtn');
 
-    // 2. Logic Kiểm tra nút bấm nội bộ
     function updateButtonState() {
         const isEmailOk = emailField && emailField.value.trim() !== "";
         const isPhoneOk = phoneField && phoneField.value.trim() !== "";
         
-        // Đăng ký: Cần SĐT
         if (dangkyBtn) {
             dangkyBtn.disabled = !isPhoneOk;
             dangkyBtn.style.opacity = isPhoneOk ? "1" : "0.5";
             dangkyBtn.style.cursor = isPhoneOk ? "pointer" : "not-allowed";
         }
-        // Tư vấn: Cần cả Email & SĐT
         if (tuvanBtn) {
-            tuvanBtn.disabled = !(isEmailOk && isPhoneOk);
-            tuvanBtn.style.opacity = (isEmailOk && isPhoneOk) ? "1" : "0.5";
-            tuvanBtn.style.cursor = (isEmailOk && isPhoneOk) ? "pointer" : "not-allowed";
+            const active = isEmailOk && isPhoneOk;
+            tuvanBtn.disabled = !active;
+            tuvanBtn.style.opacity = active ? "1" : "0.5";
+            tuvanBtn.style.cursor = active ? "pointer" : "not-allowed";
         }
     }
 
@@ -74,20 +73,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (phoneField) phoneField.addEventListener('input', updateButtonState);
     updateButtonState();
 
-    // 3. Google Login logic với giải mã an toàn
     window.handleGoogleLoginCTA = (response) => {
         try {
             const base64Url = response.credential.split('.')[1];
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
             const payload = JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
-            
             if (emailField) emailField.value = payload.email;
             if (googleCustomBtn) googleCustomBtn.classList.add('hidden');
             if (googleUserInfo) googleUserInfo.classList.remove('hidden');
-            if (googleUserAvatar) googleUserAvatar.src = payload.picture;
-            if (googleUserEmail) googleUserEmail.textContent = payload.email;
+            googleUserAvatar.src = payload.picture;
+            googleUserEmail.textContent = payload.email;
             updateButtonState();
-        } catch (e) { console.error("Login Error:", e); }
+        } catch (e) { console.error("Google Login Parse Error:", e); }
     };
 
     setTimeout(() => {
@@ -96,28 +93,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 client_id: "336018277787-0prgo2k750aft6678cdeioqgptic9kq3.apps.googleusercontent.com",
                 callback: handleGoogleLoginCTA
             });
-            // Vẽ nút dạng icon nhỏ (Bên trong nút custom của bạn)
-            google.accounts.id.renderButton(googleBtnContainer, { theme: "outline", size: "large", type: "icon", shape: "circle" });
+            google.accounts.id.renderButton(googleBtnContainer, { type: "icon", shape: "circle" });
         }
-    }, 800);
+    }, 1000);
 
-    // QUAN TRỌNG: Kích hoạt nút bấm chính
-    if (googleCustomBtn) {
-        googleCustomBtn.addEventListener('click', () => {
-            if (window.google) google.accounts.id.prompt();
-        });
-    }
+    if (googleCustomBtn) googleCustomBtn.addEventListener('click', () => { if (window.google) google.accounts.id.prompt(); });
+    if (googleLogoutBtn) googleLogoutBtn.addEventListener('click', () => {
+        googleUserInfo.classList.add('hidden');
+        googleCustomBtn.classList.remove('hidden');
+        if (emailField) emailField.value = '';
+        updateButtonState();
+    });
 
-    if (googleLogoutBtn) {
-        googleLogoutBtn.addEventListener('click', () => {
-            if (googleUserInfo) googleUserInfo.classList.add('hidden');
-            if (googleCustomBtn) googleCustomBtn.classList.remove('hidden');
-            if (emailField) emailField.value = '';
-            updateButtonState();
-        });
-    }
-
-    // 4. Submit TƯ VẤN (Sử dụng Realtime Database)
+    // 4. Submit TƯ VẤN (Cấu trúc chống treo)
     if (tuvanBtn) {
         tuvanBtn.addEventListener('click', async () => {
             const email = emailField.value.trim();
@@ -125,31 +113,43 @@ document.addEventListener('DOMContentLoaded', () => {
             tuvanBtn.disabled = true;
             tuvanBtn.textContent = 'Đang gửi...';
 
+            console.log("⏳ Bắt đầu gởi dữ liệu TƯ VẤN...");
+
+            // TIMEOUT PROTECTOR: Sau 7 giây sẽ tự thoát nếu bị treo
+            const timeout = setTimeout(() => {
+                alert("Lỗi: Quá thời gian chờ (Timeout). Hãy kiểm tra Rules của Firebase Database!");
+                tuvanBtn.disabled = false;
+                tuvanBtn.textContent = 'TƯ VẤN';
+            }, 7000);
+
             try {
                 const tuvanRef = database.ref("tuvan_requests");
                 
-                // Bước 1: Gửi dữ liệu (Quan trọng nhất)
+                // Gửi dữ liệu (Promise)
                 await tuvanRef.push({
                     email, 
                     phone, 
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
+                console.log("✅ Dữ liệu đã được gởi lên Firebase.");
 
-                // Bước 2: Đếm nhanh số bài để báo Telegram
-                let totalCount = 0;
+                // Lấy snapshot đếm số lượng (Cố gắng lấy, lỗi thì thôi)
+                let total = 0;
                 try {
-                    const snapshot = await tuvanRef.get();
-                    if (snapshot.exists()) {
-                        totalCount = Object.keys(snapshot.val()).length;
-                    }
-                } catch (e) { console.warn("Lỗi đếm số lượng:", e); }
+                    const snap = await tuvanRef.get();
+                    if (snap.exists()) total = Object.keys(snap.val()).length;
+                } catch (e) { console.warn("Không đếm được số bài:", e); }
 
-                // Bước 3: Thông báo Telegram
-                await sendTelegramNotification(email, phone, totalCount);
+                clearTimeout(timeout);
+                
+                // Gửi Telegram (không chờ bản tin này xong)
+                sendTelegramNotification(email, phone, total);
 
-                alert('Gửi hoàn tất! Dữ liệu đã được lưu vào Database.');
+                alert('Gửi tư vấn thành công! Chúng tôi sẽ liên hệ bạn.');
             } catch (error) {
-                alert('Lỗi: ' + error.message);
+                clearTimeout(timeout);
+                console.error("❌ Lỗi hệ thống:", error);
+                alert('Có lỗi xảy ra: ' + error.message);
             } finally {
                 tuvanBtn.disabled = false;
                 tuvanBtn.textContent = 'TƯ VẤN';
@@ -158,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. Submit ĐĂNG KÝ
     if (dangkyBtn) {
         dangkyBtn.addEventListener('click', () => {
             const url = `https://test-techcamp.vercel.app/?at_email=${encodeURIComponent(emailField.value)}&at_phone=${encodeURIComponent(phoneField.value)}`;
@@ -166,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Scroll Animation
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
     }, { threshold: 0.1 });
