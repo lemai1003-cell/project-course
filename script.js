@@ -9,7 +9,6 @@ const firebaseConfig = {
   measurementId: "G-SG3NJ1FHXG"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -25,10 +24,8 @@ async function sendTelegramNotification(email, phone, totalCount) {
         `📧 Email: ${email || 'Chưa nhập'}\n` +
         `📞 SĐT: ${phone || 'Chưa nhập'}\n` +
         `👥 Tổng yêu cầu: ${totalCount}`;
-
-    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
     try {
-        await fetch(url, {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message })
@@ -39,10 +36,10 @@ async function sendTelegramNotification(email, phone, totalCount) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+
     // Mobile Menu Toggle
     const mobileBtn = document.querySelector('.mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
-
     if (mobileBtn) {
         mobileBtn.addEventListener('click', () => {
             navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
@@ -70,43 +67,44 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ============================================
-    // GOOGLE SIGN-IN INTEGRATION
+    // FORM ELEMENTS
+    // ============================================
+    const emailField   = document.getElementById('emailField');
+    const phoneField   = document.getElementById('phoneField');
+    const tuvanBtn     = document.getElementById('tuvan-btn');
+    const dangkyBtn    = document.getElementById('dangky-btn');
+
+    // ============================================
+    // GOOGLE SIGN-IN (auto-fill email only)
     // ============================================
     const GOOGLE_CLIENT_ID = "336018277787-0prgo2k750aft6678cdeioqgptic9kq3.apps.googleusercontent.com";
-
-    const googleSignInGroup = document.getElementById('googleSignInGroup');
     const googleBtnContainer = document.getElementById('googleBtnContainer');
-    const googleUserInfo = document.getElementById('googleUserInfo');
-    const googleUserAvatar = document.getElementById('googleUserAvatar');
-    const googleUserEmail = document.getElementById('googleUserEmail');
-    const googleLogoutBtn = document.getElementById('googleLogoutBtn');
-    const emailInput = document.getElementById('emailInput');
-    const phoneGroup = document.getElementById('phoneGroup');
-    const ctaBtns = document.getElementById('ctaBtns');
+    const googleUserInfo     = document.getElementById('googleUserInfo');
+    const googleUserAvatar   = document.getElementById('googleUserAvatar');
+    const googleUserEmail    = document.getElementById('googleUserEmail');
+    const googleLogoutBtn    = document.getElementById('googleLogoutBtn');
 
-    // Callback khi đăng nhập Google thành công
     window.handleGoogleLoginCTA = (response) => {
         const base64Url = response.credential.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const payload = JSON.parse(decodeURIComponent(window.atob(base64).split('').map(c =>
-            '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-        ).join('')));
+        const base64   = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const payload  = JSON.parse(decodeURIComponent(
+            window.atob(base64).split('').map(c =>
+                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+            ).join('')
+        ));
 
-        // Cập nhật giao diện
-        googleSignInGroup.classList.add('hidden');
+        // Auto-fill email field
+        if (emailField) emailField.value = payload.email;
+
+        // Show user badge, hide google button
+        googleBtnContainer.classList.add('hidden');
         googleUserInfo.classList.remove('hidden');
         googleUserAvatar.src = payload.picture;
         googleUserEmail.textContent = payload.email;
-        emailInput.value = payload.email;
-
-        // Hiện SĐT và nút bấm
-        phoneGroup.style.display = 'block';
-        ctaBtns.style.display = 'flex';
     };
 
-    // Khởi tạo nút Google Sign-In
     setTimeout(() => {
-        if (window.google) {
+        if (window.google && googleBtnContainer) {
             google.accounts.id.initialize({
                 client_id: GOOGLE_CLIENT_ID,
                 callback: handleGoogleLoginCTA
@@ -118,111 +116,72 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 600);
 
-    // Đăng xuất Google
     if (googleLogoutBtn) {
         googleLogoutBtn.addEventListener('click', () => {
             googleUserInfo.classList.add('hidden');
-            googleSignInGroup.classList.remove('hidden');
-            phoneGroup.style.display = 'none';
-            ctaBtns.style.display = 'none';
-            if (emailInput) emailInput.value = '';
-            const signupForm = document.querySelector('.signup-form');
-            if (signupForm) signupForm.reset();
+            googleBtnContainer.classList.remove('hidden');
+            if (emailField) emailField.value = '';
             if (window.google) google.accounts.id.disableAutoSelect();
         });
     }
 
     // ============================================
-    // ĐĂNG KÝ Form Submission Handler
+    // TƯ VẤN Button → Telegram notification
     // ============================================
-    const signupForm = document.querySelector('.signup-form');
-    if (signupForm) {
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const email = emailInput ? emailInput.value : '';
-            const phone = signupForm.querySelector('input[name="phone"]') ?
-                          signupForm.querySelector('input[name="phone"]').value : '';
-
-            const submitBtn = signupForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-
-            // Open new tab
-            window.open('https://test-techcamp.vercel.app/', '_blank');
-
-            try {
-                submitBtn.textContent = 'Đang gửi...';
-                submitBtn.disabled = true;
-
-                await db.collection("registrations").add({
-                    email: email,
-                    phone: phone,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    source: "website"
-                });
-
-                alert('Đăng ký thành công!');
-                signupForm.reset();
-
-            } catch (error) {
-                console.error("Error adding document: ", error);
-                alert('Có lỗi xảy ra: ' + error.message);
-            } finally {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }
-        });
-    }
-
-    // ============================================
-    // TƯ VẤN Button Handler (Telegram notification)
-    // ============================================
-    const tuvanBtn = document.getElementById('tuvan-btn');
     if (tuvanBtn) {
         tuvanBtn.addEventListener('click', async () => {
-            const email = emailInput ? emailInput.value : '';
-            const phone = signupForm && signupForm.querySelector('input[name="phone"]') ?
-                          signupForm.querySelector('input[name="phone"]').value : '';
+            const email = emailField ? emailField.value.trim() : '';
+            const phone = phoneField ? phoneField.value.trim() : '';
 
             if (!email && !phone) {
-                alert('Vui lòng đăng nhập Google hoặc nhập Số điện thoại trước khi yêu cầu tư vấn!');
+                alert('Vui lòng nhập Email hoặc Số điện thoại trước khi yêu cầu tư vấn!');
                 return;
             }
 
+            const origText = tuvanBtn.textContent;
             tuvanBtn.textContent = 'Đang gửi...';
             tuvanBtn.disabled = true;
 
             try {
+                // Lưu vào Firestore
                 await db.collection("tuvan_requests").add({
                     email: email,
                     phone: phone,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
+                // Đếm tổng yêu cầu
                 const snapshot = await db.collection("tuvan_requests").get();
                 const totalCount = snapshot.size;
 
+                // Gửi Telegram
                 await sendTelegramNotification(email, phone, totalCount);
 
                 alert('Yêu cầu tư vấn đã được gửi! Chúng tôi sẽ liên hệ bạn sớm nhất.');
-                if (signupForm) signupForm.reset();
 
             } catch (error) {
-                console.error('Lỗi gửi yêu cầu tư vấn:', error);
+                console.error('Lỗi:', error);
                 alert('Có lỗi xảy ra: ' + error.message);
             } finally {
-                tuvanBtn.textContent = 'TƯ VẤN';
+                tuvanBtn.textContent = origText;
                 tuvanBtn.disabled = false;
             }
         });
     }
 
-    // Scroll Reveal Animation
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: "0px"
-    };
+    // ============================================
+    // ĐĂNG KÝ Button → Open new tab
+    // ============================================
+    if (dangkyBtn) {
+        dangkyBtn.addEventListener('click', () => {
+            window.open('https://test-techcamp.vercel.app/', '_blank');
+        });
+    }
 
+    // ============================================
+    // Scroll Reveal Animation
+    // ============================================
+    const observerOptions = { threshold: 0.1, rootMargin: "0px" };
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -232,20 +191,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, observerOptions);
 
-    const animatedElements = document.querySelectorAll('.feature-card, .timeline-item, .team-card, .hero-text, .hero-visual');
-    animatedElements.forEach((el, index) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = `all 0.6s ease ${index * 0.1}s`;
-        observer.observe(el);
-    });
+    document.querySelectorAll('.feature-card, .timeline-item, .team-card, .hero-text, .hero-visual')
+        .forEach((el, index) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = `all 0.6s ease ${index * 0.1}s`;
+            observer.observe(el);
+        });
 
     const styleSheet = document.createElement("style");
-    styleSheet.innerText = `
-        .visible {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
-    `;
+    styleSheet.innerText = `.visible { opacity: 1 !important; transform: translateY(0) !important; }`;
     document.head.appendChild(styleSheet);
 });

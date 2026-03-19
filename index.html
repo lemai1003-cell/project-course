@@ -309,26 +309,28 @@
             <div class="cta-content">
                 <h2>SẴN SÀNG BỨT PHÁ SỰ NGHIỆP BA NGAY HÔM NAY</h2>
                 <p>ĐĂNG KÝ NGAY HÔM NAY ĐỂ NHẬN ƯU ĐÃI</p>
-                <form class="signup-form">
-                    <!-- Google Sign-In Area -->
-                    <div class="form-group google-signin-group" id="googleSignInGroup">
+                <form class="signup-form" id="signupForm">
+                    <!-- Google Sign-In to auto-fill email -->
+                    <div class="google-autofill-row">
                         <div id="googleBtnContainer"></div>
-                    </div>
-                    <!-- Logged-in email display -->
-                    <div class="form-group google-user-info hidden" id="googleUserInfo">
-                        <div class="google-user-row">
+                        <div id="googleUserInfo" class="hidden">
                             <img id="googleUserAvatar" src="" alt="Avatar" class="google-avatar">
                             <span id="googleUserEmail" class="google-email-text"></span>
                             <button type="button" id="googleLogoutBtn" class="google-logout-btn">&#x2715;</button>
                         </div>
-                        <input type="hidden" name="email" id="emailInput">
                     </div>
-                    <div class="form-group" id="phoneGroup" style="display:none;">
-                        <input type="tel" name="phone" placeholder="Số điện thoại">
+                    <!-- Email input (always visible, auto-filled by Google) -->
+                    <div class="form-group">
+                        <input type="email" name="email" id="emailField" placeholder="📧 Email của bạn" required>
                     </div>
-                    <div class="cta-buttons" id="ctaBtns" style="display:none;">
+                    <!-- Phone input (always visible) -->
+                    <div class="form-group">
+                        <input type="tel" name="phone" id="phoneField" placeholder="📞 Số điện thoại" required>
+                    </div>
+                    <!-- Action buttons -->
+                    <div class="cta-buttons">
                         <button type="button" id="tuvan-btn" class="btn-secondary">TƯ VẤN</button>
-                        <button type="submit" class="btn-primary">ĐĂNG KÝ</button>
+                        <button type="button" id="dangky-btn" class="btn-primary">ĐĂNG KÝ</button>
                     </div>
                 </form>
             </div>
