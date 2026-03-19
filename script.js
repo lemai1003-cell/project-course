@@ -93,6 +93,75 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Form not found!'); // Debug log
     }
 
+    // ============================================
+    // TELEGRAM CONFIG
+    // ============================================
+    const TELEGRAM_BOT_TOKEN = '8601457526:AAEDpglDCgTX_qBoRDWNddVXK4MR-IS4AwE';
+    const TELEGRAM_CHAT_ID = '644667498';
+
+    async function sendTelegramNotification(email, phone, totalCount) {
+        const message = 
+            `🔔 Có học viên yêu cầu tư vấn!\n\n` +
+            `📧 Email: ${email || 'Chưa nhập'}\n` +
+            `📞 SĐT: ${phone || 'Chưa nhập'}\n` +
+            `👥 Tổng yêu cầu: ${totalCount}`;
+
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message
+            })
+        });
+    }
+
+    // ============================================
+    // TƯ VẤN Button Handler
+    // ============================================
+    const tuvanBtn = document.getElementById('tuvan-btn');
+    if (tuvanBtn) {
+        tuvanBtn.addEventListener('click', async () => {
+            const email = signupForm ? signupForm.querySelector('input[name="email"]').value : '';
+            const phone = signupForm ? signupForm.querySelector('input[name="phone"]').value : '';
+
+            if (!email && !phone) {
+                alert('Vui lòng nhập Email hoặc Số điện thoại trước khi yêu cầu tư vấn!');
+                return;
+            }
+
+            tuvanBtn.textContent = 'Đang gửi...';
+            tuvanBtn.disabled = true;
+
+            try {
+                // Save to Firestore
+                await db.collection("tuvan_requests").add({
+                    email: email,
+                    phone: phone,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // Get total count
+                const snapshot = await db.collection("tuvan_requests").get();
+                const totalCount = snapshot.size;
+
+                // Send Telegram notification
+                await sendTelegramNotification(email, phone, totalCount);
+
+                alert('Yêu cầu tư vấn đã được gửi! Chúng tôi sẽ liên hệ bạn sớm nhất.');
+                if (signupForm) signupForm.reset();
+
+            } catch (error) {
+                console.error('Lỗi gửi yêu cầu tư vấn:', error);
+                alert('Có lỗi xảy ra: ' + error.message);
+            } finally {
+                tuvanBtn.textContent = 'TƯ VẤN';
+                tuvanBtn.disabled = false;
+            }
+        });
+    }
+
     // Scroll Reveal Animation
     const observerOptions = {
         threshold: 0.1,
