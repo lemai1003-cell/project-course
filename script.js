@@ -116,13 +116,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Gắn sự kiện cho các ô nhập liệu
-    if (emailField) emailField.addEventListener('input', updateButtonState);
-    if (phoneField) phoneField.addEventListener('input', updateButtonState);
+    // Gắn sự kiện cho các ô nhập liệu (Checking multiple events for better reliability)
+    ['input', 'change', 'keyup'].forEach(evt => {
+        if (emailField) emailField.addEventListener(evt, updateButtonState);
+        if (phoneField) phoneField.addEventListener(evt, updateButtonState);
+    });
     
-    // Khởi tạo trạng thái ban đầu (Disable 2 nút)
+    // Khởi tạo trạng thái ban đầu
     updateButtonState();
 
+    // ============================================
+    // BUTTON ACTIONS WITH SAFETY CHECK
+    // ============================================
+    if (dangkyBtn) {
+        dangkyBtn.addEventListener('click', () => {
+            const email = emailField ? emailField.value.trim() : "";
+            const phone = phoneField ? phoneField.value.trim() : "";
+            
+            if (!email || !phone) {
+                alert("Vui lòng điền đủ Email và Số điện thoại!");
+                return;
+            }
+            
+            window.location.href = `https://test-techcamp.vercel.app/?at_email=${encodeURIComponent(email)}&at_phone=${encodeURIComponent(phone)}`;
+        });
+    }
+
+    if (tuvanBtn) {
+        tuvanBtn.addEventListener('click', () => {
+            const email = emailField ? emailField.value.trim() : "";
+            const phone = phoneField ? phoneField.value.trim() : "";
+            
+            if (!email || !phone) {
+                alert("Vui lòng điền đủ Email và Số điện thoại!");
+                return;
+            }
+            
+            // Xử lý tư vấn (Ví dụ: hiện thông báo hoặc gởi form)
+            alert("Yêu cầu tư vấn của bạn đã được ghi nhận!");
+        });
+    }
     window.handleGoogleLoginCTA = (response) => {
         const base64Url = response.credential.split('.')[1];
         const base64   = base64Url.replace(/-/g, '+').replace(/_/g, '/');
