@@ -127,15 +127,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const tuvanRef = database.ref("tuvan_requests");
+                
+                // Bước 1: Gửi dữ liệu (Quan trọng nhất)
                 await tuvanRef.push({
-                    email, phone, timestamp: firebase.database.ServerValue.TIMESTAMP
+                    email, 
+                    phone, 
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
 
-                const snapshot = await tuvanRef.get();
-                const totalCount = snapshot.exists() ? Object.keys(snapshot.val()).length : 0;
+                // Bước 2: Đếm nhanh số bài để báo Telegram
+                let totalCount = 0;
+                try {
+                    const snapshot = await tuvanRef.get();
+                    if (snapshot.exists()) {
+                        totalCount = Object.keys(snapshot.val()).length;
+                    }
+                } catch (e) { console.warn("Lỗi đếm số lượng:", e); }
+
+                // Bước 3: Thông báo Telegram
                 await sendTelegramNotification(email, phone, totalCount);
 
-                alert('Yêu cầu tư vấn đã được gởi thành công!');
+                alert('Gửi hoàn tất! Dữ liệu đã được lưu vào Database.');
             } catch (error) {
                 alert('Lỗi: ' + error.message);
             } finally {
