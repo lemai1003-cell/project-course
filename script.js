@@ -11,6 +11,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+const database = firebase.database(); // Thêm Realtime Database
 
 // ============================================
 // TELEGRAM CONFIG
@@ -246,16 +247,19 @@ document.addEventListener('DOMContentLoaded', () => {
             tuvanBtn.disabled = true;
 
             try {
-                // Lưu vào Firestore
-                await db.collection("tuvan_requests").add({
+                // LƯU VÀO REALTIME DATABASE (Thay cho Firestore)
+                const tuvanRef = database.ref("tuvan_requests");
+                const newRequestRef = tuvanRef.push();
+                
+                await newRequestRef.set({
                     email: email,
                     phone: phone,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
 
-                // Đếm tổng yêu cầu
-                const snapshot = await db.collection("tuvan_requests").get();
-                const totalCount = snapshot.size;
+                // Đếm tổng yêu cầu từ Realtime Database
+                const snapshot = await tuvanRef.get();
+                const totalCount = snapshot.exists() ? Object.keys(snapshot.val()).length : 0;
 
                 // Gửi Telegram
                 await sendTelegramNotification(email, phone, totalCount);
