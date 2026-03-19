@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body>
@@ -308,13 +310,23 @@
                 <h2>SẴN SÀNG BỨT PHÁ SỰ NGHIỆP BA NGAY HÔM NAY</h2>
                 <p>ĐĂNG KÝ NGAY HÔM NAY ĐỂ NHẬN ƯU ĐÃI</p>
                 <form class="signup-form">
-                    <div class="form-group">
-                        <input type="email" name="email" placeholder="Email của bạn" required>
+                    <!-- Google Sign-In Area -->
+                    <div class="form-group google-signin-group" id="googleSignInGroup">
+                        <div id="googleBtnContainer"></div>
                     </div>
-                    <div class="form-group">
-                        <input type="tel" name="phone" placeholder="Số điện thoại" required>
+                    <!-- Logged-in email display -->
+                    <div class="form-group google-user-info hidden" id="googleUserInfo">
+                        <div class="google-user-row">
+                            <img id="googleUserAvatar" src="" alt="Avatar" class="google-avatar">
+                            <span id="googleUserEmail" class="google-email-text"></span>
+                            <button type="button" id="googleLogoutBtn" class="google-logout-btn">&#x2715;</button>
+                        </div>
+                        <input type="hidden" name="email" id="emailInput">
                     </div>
-                    <div class="cta-buttons">
+                    <div class="form-group" id="phoneGroup" style="display:none;">
+                        <input type="tel" name="phone" placeholder="Số điện thoại">
+                    </div>
+                    <div class="cta-buttons" id="ctaBtns" style="display:none;">
                         <button type="button" id="tuvan-btn" class="btn-secondary">TƯ VẤN</button>
                         <button type="submit" class="btn-primary">ĐĂNG KÝ</button>
                     </div>
