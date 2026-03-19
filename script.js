@@ -1,17 +1,19 @@
+// Firebase Configuration (Compat version)
 const firebaseConfig = {
-  apiKey: "AIzaSyDSm7h3_I5rG7X_P4H5F6G7H8I9J0K1L2M",
-  authDomain: "test-techcamp-d0a1b.firebaseapp.com",
-  databaseURL: "https://test-techcamp-d0a1b-default-rtdb.firebaseio.com",
-  projectId: "test-techcamp-d0a1b",
-  storageBucket: "test-techcamp-d0a1b.appspot.com",
-  messagingSenderId: "332733702113",
-  appId: "1:332733702113:web:fa1503e178361455d83ca0",
-  measurementId: "G-SG3NJ1FHXG"
+    apiKey: "AIzaSyDJsvWI-J9pc-JhzheR_C4xQXhCNbWDnFI",
+    authDomain: "project-course-985d2.firebaseapp.com",
+    projectId: "project-course-985d2",
+    storageBucket: "project-course-985d2.firebasestorage.app",
+    messagingSenderId: "332733702113",
+    appId: "1:332733702113:web:fa1503e178361455d83ca0",
+    measurementId: "G-SG3NJ1FHXG",
+    databaseURL: "https://project-course-985d2-default-rtdb.firebaseio.com/" 
 };
 
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 const db = firebase.firestore();
-const database = firebase.database(); // Thêm Realtime Database
 
 // ============================================
 // TELEGRAM CONFIG
@@ -37,281 +39,110 @@ async function sendTelegramNotification(email, phone, totalCount) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-
-    // Mobile Menu Toggle
-    const mobileBtn = document.querySelector('.mobile-menu-btn');
-    const navLinks = document.querySelector('.nav-links');
-    if (mobileBtn) {
-        mobileBtn.addEventListener('click', () => {
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-            if (navLinks.style.display === 'flex') {
-                navLinks.style.flexDirection = 'column';
-                navLinks.style.position = 'absolute';
-                navLinks.style.top = '70px';
-                navLinks.style.left = '0';
-                navLinks.style.width = '100%';
-                navLinks.style.background = '#0f172a';
-                navLinks.style.padding = '20px';
-                navLinks.style.boxShadow = '0 10px 20px rgba(0,0,0,0.5)';
-            }
-        });
-    }
-
-    // Navbar Scroll Effect
-    const navbar = document.querySelector('.navbar');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
-
-    // ============================================
-    // FORM ELEMENTS
-    // ============================================
-    const emailField   = document.getElementById('emailField');
-    const phoneField   = document.getElementById('phoneField');
-    const tuvanBtn     = document.getElementById('tuvan-btn');
-    const dangkyBtn    = document.getElementById('dangky-btn');
-
-    // ============================================
-    // GOOGLE SIGN-IN (auto-fill email only)
-    // ============================================
-    const GOOGLE_CLIENT_ID = "336018277787-0prgo2k750aft6678cdeioqgptic9kq3.apps.googleusercontent.com";
+    // 1. Elements
+    const emailField = document.getElementById('emailField');
+    const phoneField = document.getElementById('phoneField');
+    const tuvanBtn = document.getElementById('tuvan-btn');
+    const dangkyBtn = document.getElementById('dangky-btn');
     const googleBtnContainer = document.getElementById('googleBtnContainer');
-    const googleUserInfo     = document.getElementById('googleUserInfo');
-    const googleUserAvatar   = document.getElementById('googleUserAvatar');
-    const googleUserEmail    = document.getElementById('googleUserEmail');
-    const googleLogoutBtn    = document.getElementById('googleLogoutBtn');
-
+    const googleUserInfo = document.getElementById('googleUserInfo');
+    const googleUserAvatar = document.getElementById('googleUserAvatar');
+    const googleUserEmail = document.getElementById('googleUserEmail');
+    const googleLogoutBtn = document.getElementById('googleLogoutBtn');
     const googleCustomBtn = document.getElementById('googleCustomBtn');
 
-    // LOGIC KIỂM TRA ĐIỀU KIỆN 2 NÚT BẤM (Dùng các biến đã khai báo dòng 74,75)
+    // 2. Logic Kiểm tra nút bấm nội bộ
     function updateButtonState() {
         const isEmailOk = emailField && emailField.value.trim() !== "";
         const isPhoneOk = phoneField && phoneField.value.trim() !== "";
         
-        // Nút Đăng ký: chỉ cần SĐT
-        if (isPhoneOk) {
-            if (dangkyBtn) {
-                dangkyBtn.disabled = false;
-                dangkyBtn.style.opacity = "1";
-                dangkyBtn.style.cursor = "pointer";
-            }
-        } else {
-            if (dangkyBtn) {
-                dangkyBtn.disabled = true;
-                dangkyBtn.style.opacity = "0.5";
-                dangkyBtn.style.cursor = "not-allowed";
-            }
+        // Đăng ký: Cần SĐT
+        if (dangkyBtn) {
+            dangkyBtn.disabled = !isPhoneOk;
+            dangkyBtn.style.opacity = isPhoneOk ? "1" : "0.5";
+            dangkyBtn.style.cursor = isPhoneOk ? "pointer" : "not-allowed";
         }
-
-        // Nút Tư vấn: cần cả Email và SĐT
-        if (isEmailOk && isPhoneOk) {
-            if (tuvanBtn) {
-                tuvanBtn.disabled = false;
-                tuvanBtn.style.opacity = "1";
-                tuvanBtn.style.cursor = "pointer";
-            }
-        } else {
-            if (tuvanBtn) {
-                tuvanBtn.disabled = true;
-                tuvanBtn.style.opacity = "0.5";
-                tuvanBtn.style.cursor = "not-allowed";
-            }
+        // Tư vấn: Cần cả Email & SĐT
+        if (tuvanBtn) {
+            tuvanBtn.disabled = !(isEmailOk && isPhoneOk);
+            tuvanBtn.style.opacity = (isEmailOk && isPhoneOk) ? "1" : "0.5";
+            tuvanBtn.style.cursor = (isEmailOk && isPhoneOk) ? "pointer" : "not-allowed";
         }
     }
 
-    // Gắn sự kiện cho các ô nhập liệu (Checking multiple events for better reliability)
-    ['input', 'change', 'keyup'].forEach(evt => {
-        if (emailField) emailField.addEventListener(evt, updateButtonState);
-        if (phoneField) phoneField.addEventListener(evt, updateButtonState);
-    });
-    
-    // Khởi tạo trạng thái ban đầu
+    if (emailField) emailField.addEventListener('input', updateButtonState);
+    if (phoneField) phoneField.addEventListener('input', updateButtonState);
     updateButtonState();
 
-    // ============================================
-    // BUTTON ACTIONS WITH SAFETY CHECK
-    // ============================================
-    if (dangkyBtn) {
-        dangkyBtn.addEventListener('click', () => {
-            const email = emailField ? emailField.value.trim() : "";
-            const phone = phoneField ? phoneField.value.trim() : "";
-            
-            if (!phone) {
-                alert("Vui lòng điền Số điện thoại!");
-                return;
-            }
-            
-            const url = `https://test-techcamp.vercel.app/?at_email=${encodeURIComponent(email)}&at_phone=${encodeURIComponent(phone)}`;
-            window.open(url, '_blank');
-        });
-    }
-
-    if (tuvanBtn) {
-        tuvanBtn.addEventListener('click', () => {
-            const phone = phoneField ? phoneField.value.trim() : "";
-            
-            if (!phone) {
-                alert("Vui lòng điền Số điện thoại!");
-                return;
-            }
-            
-            // Xử lý tư vấn (Ví dụ: hiện thông báo hoặc gởi form)
-            alert("Yêu cầu tư vấn của bạn đã được ghi nhận!");
-        });
-    }
+    // 3. Google Login logic
     window.handleGoogleLoginCTA = (response) => {
-        const base64Url = response.credential.split('.')[1];
-        const base64   = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const payload  = JSON.parse(decodeURIComponent(
-            window.atob(base64).split('').map(c =>
-                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-            ).join('')
-        ));
-
-        // Auto-fill email field
+        const payload = JSON.parse(atob(response.credential.split('.')[1]));
         if (emailField) emailField.value = payload.email;
-
-        // Cập nhật giao diện: Hiện badge người dùng, ẩn nút google
         if (googleCustomBtn) googleCustomBtn.classList.add('hidden');
         if (googleUserInfo) googleUserInfo.classList.remove('hidden');
-        
         googleUserAvatar.src = payload.picture;
         googleUserEmail.textContent = payload.email;
-        
-        // Cập nhật lại trạng thái nút sau khi login thành công
         updateButtonState();
     };
 
     setTimeout(() => {
         if (window.google && googleBtnContainer) {
             google.accounts.id.initialize({
-                client_id: GOOGLE_CLIENT_ID,
-                callback: handleGoogleLoginCTA,
-                auto_select: false,
-                itp_support: true
+                client_id: "336018277787-0prgo2k750aft6678cdeioqgptic9kq3.apps.googleusercontent.com",
+                callback: handleGoogleLoginCTA
             });
-            // Vẽ nút dạng ICON (Để Google không thể tự ý nhét email vào)
-            google.accounts.id.renderButton(
-                googleBtnContainer,
-                { theme: "outline", size: "large", shape: "circle", type: "icon" }
-            );
+            google.accounts.id.renderButton(googleBtnContainer, { type: "icon", shape: "circle" });
         }
     }, 600);
 
-    // Kích hoạt click cho phần vỏ bọc bên ngoài
-    if (googleCustomBtn) {
-        googleCustomBtn.addEventListener('click', () => {
-            // Khi nhấn vào vỏ, ta yêu cầu Google hiện popup chọn tài khoản
-            if (window.google) google.accounts.id.prompt();
-        });
-    }
+    if (googleCustomBtn) googleCustomBtn.addEventListener('click', () => google.accounts.id.prompt());
+    if (googleLogoutBtn) googleLogoutBtn.addEventListener('click', () => {
+        googleUserInfo.classList.add('hidden');
+        googleCustomBtn.classList.remove('hidden');
+        if (emailField) emailField.value = '';
+        updateButtonState();
+    });
 
-    if (googleLogoutBtn) {
-        googleLogoutBtn.addEventListener('click', () => {
-            if (googleUserInfo) googleUserInfo.classList.add('hidden');
-            if (googleCustomBtn) googleCustomBtn.classList.remove('hidden');
-            
-            if (emailField) emailField.value = '';
-            if (window.google) {
-                google.accounts.id.disableAutoSelect(); // Đăng xuất
-                // Render lại nút icon
-                google.accounts.id.renderButton(
-                    googleBtnContainer,
-                    { theme: "outline", size: "large", shape: "circle", type: "icon" }
-                );
-            }
-            // Cập nhật lại sau khi xóa email
-            updateButtonState();
-        });
-    }
-
-    // ============================================
-    // TƯ VẤN Button → Telegram notification
-    // ============================================
+    // 4. Submit TƯ VẤN (Sử dụng Realtime Database)
     if (tuvanBtn) {
         tuvanBtn.addEventListener('click', async () => {
-            const email = emailField ? emailField.value.trim() : '';
-            const phone = phoneField ? phoneField.value.trim() : '';
-
-            if (!email && !phone) {
-                alert('Vui lòng nhập Email hoặc Số điện thoại trước khi yêu cầu tư vấn!');
-                return;
-            }
-
-            const origText = tuvanBtn.textContent;
-            tuvanBtn.textContent = 'Đang gửi...';
+            const email = emailField.value.trim();
+            const phone = phoneField.value.trim();
             tuvanBtn.disabled = true;
+            tuvanBtn.textContent = 'Đang gửi...';
 
             try {
-                // LƯU VÀO REALTIME DATABASE (Thay cho Firestore)
                 const tuvanRef = database.ref("tuvan_requests");
-                const newRequestRef = tuvanRef.push();
-                
-                await newRequestRef.set({
-                    email: email,
-                    phone: phone,
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                await tuvanRef.push({
+                    email, phone, timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
 
-                // Đếm tổng yêu cầu từ Realtime Database
                 const snapshot = await tuvanRef.get();
                 const totalCount = snapshot.exists() ? Object.keys(snapshot.val()).length : 0;
-
-                // Gửi Telegram
                 await sendTelegramNotification(email, phone, totalCount);
 
-                alert('Yêu cầu tư vấn đã được gửi! Chúng tôi sẽ liên hệ bạn sớm nhất.');
-
+                alert('Yêu cầu tư vấn đã được gởi thành công!');
             } catch (error) {
-                console.error('Lỗi:', error);
-                alert('Có lỗi xảy ra: ' + error.message);
+                alert('Lỗi: ' + error.message);
             } finally {
-                tuvanBtn.textContent = origText;
                 tuvanBtn.disabled = false;
+                tuvanBtn.textContent = 'TƯ VẤN';
+                updateButtonState();
             }
         });
     }
 
-    // ============================================
-    // ĐĂNG KÝ Button → Open new tab with parameters
-    // ============================================
+    // 5. Submit ĐĂNG KÝ
     if (dangkyBtn) {
         dangkyBtn.addEventListener('click', () => {
-            const email = emailField ? emailField.value.trim() : '';
-            const phone = phoneField ? phoneField.value.trim() : '';
-            
-            // Chuyển hướng kèm theo dữ liệu
-            const targetUrl = `https://test-techcamp.vercel.app/?at_email=${encodeURIComponent(email)}&at_phone=${encodeURIComponent(phone)}`;
-            window.open(targetUrl, '_blank');
+            const url = `https://test-techcamp.vercel.app/?at_email=${encodeURIComponent(emailField.value)}&at_phone=${encodeURIComponent(phoneField.value)}`;
+            window.open(url, '_blank');
         });
     }
 
-    // ============================================
-    // Scroll Reveal Animation
-    // ============================================
-    const observerOptions = { threshold: 0.1, rootMargin: "0px" };
+    // Scroll Animation
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('.feature-card, .timeline-item, .team-card, .hero-text, .hero-visual')
-        .forEach((el, index) => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = `all 0.6s ease ${index * 0.1}s`;
-            observer.observe(el);
-        });
-
-    const styleSheet = document.createElement("style");
-    styleSheet.innerText = `.visible { opacity: 1 !important; transform: translateY(0) !important; }`;
-    document.head.appendChild(styleSheet);
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.feature-card, .timeline-item, .team-card, .hero-text, .hero-visual').forEach(el => observer.observe(el));
 });
