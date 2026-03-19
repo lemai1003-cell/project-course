@@ -109,11 +109,20 @@ document.addEventListener('DOMContentLoaded', () => {
             google.accounts.id.initialize({
                 client_id: GOOGLE_CLIENT_ID,
                 callback: handleGoogleLoginCTA,
-                auto_select: false // Tắt tự động chọn tài khoản (để ko hiện email)
+                auto_select: false,
+                itp_support: true, // Hỗ trợ bảo mật ITP để tránh cache thông tin cá nhân
+                use_fedcm_for_prompt: true // Sử dụng UI mới của trình duyệt để ẩn email
             });
             google.accounts.id.renderButton(
                 googleBtnContainer,
-                { theme: "outline", size: "large", shape: "pill", width: "260", text: "continue_with" }
+                { 
+                    theme: "outline", 
+                    size: "large", 
+                    shape: "pill", 
+                    width: "260", 
+                    text: "signin_with", // Dùng chữ "Sign in with Google" (ít bị cá nhân hóa hơn)
+                    logo_alignment: "left"
+                }
             );
         }
     }, 600);
