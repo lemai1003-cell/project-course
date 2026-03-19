@@ -88,29 +88,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // LOGIC KIỂM TRA ĐIỀU KIỆN 2 NÚT BẤM (Dùng các biến đã khai báo dòng 74,75)
     function updateButtonState() {
+        const isEmailOk = emailField && emailField.value.trim() !== "";
         const isPhoneOk = phoneField && phoneField.value.trim() !== "";
         
+        // Nút Đăng ký: chỉ cần SĐT
         if (isPhoneOk) {
-            if (tuvanBtn) {
-                tuvanBtn.disabled = false;
-                tuvanBtn.style.opacity = "1";
-                tuvanBtn.style.cursor = "pointer";
-            }
             if (dangkyBtn) {
                 dangkyBtn.disabled = false;
                 dangkyBtn.style.opacity = "1";
                 dangkyBtn.style.cursor = "pointer";
             }
         } else {
-            if (tuvanBtn) {
-                tuvanBtn.disabled = true;
-                tuvanBtn.style.opacity = "0.5";
-                tuvanBtn.style.cursor = "not-allowed";
-            }
             if (dangkyBtn) {
                 dangkyBtn.disabled = true;
                 dangkyBtn.style.opacity = "0.5";
                 dangkyBtn.style.cursor = "not-allowed";
+            }
+        }
+
+        // Nút Tư vấn: cần cả Email và SĐT
+        if (isEmailOk && isPhoneOk) {
+            if (tuvanBtn) {
+                tuvanBtn.disabled = false;
+                tuvanBtn.style.opacity = "1";
+                tuvanBtn.style.cursor = "pointer";
+            }
+        } else {
+            if (tuvanBtn) {
+                tuvanBtn.disabled = true;
+                tuvanBtn.style.opacity = "0.5";
+                tuvanBtn.style.cursor = "not-allowed";
             }
         }
     }
