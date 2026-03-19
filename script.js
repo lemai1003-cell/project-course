@@ -88,10 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // LOGIC KIỂM TRA ĐIỀU KIỆN 2 NÚT BẤM (Dùng các biến đã khai báo dòng 74,75)
     function updateButtonState() {
-        const isEmailOk = emailField && emailField.value.trim() !== "";
         const isPhoneOk = phoneField && phoneField.value.trim() !== "";
         
-        if (isEmailOk && isPhoneOk) {
+        if (isPhoneOk) {
             if (tuvanBtn) {
                 tuvanBtn.disabled = false;
                 tuvanBtn.style.opacity = "1";
@@ -133,8 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = emailField ? emailField.value.trim() : "";
             const phone = phoneField ? phoneField.value.trim() : "";
             
-            if (!email || !phone) {
-                alert("Vui lòng điền đủ Email và Số điện thoại!");
+            if (!phone) {
+                alert("Vui lòng điền Số điện thoại!");
                 return;
             }
             
@@ -144,11 +143,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (tuvanBtn) {
         tuvanBtn.addEventListener('click', () => {
-            const email = emailField ? emailField.value.trim() : "";
             const phone = phoneField ? phoneField.value.trim() : "";
             
-            if (!email || !phone) {
-                alert("Vui lòng điền đủ Email và Số điện thoại!");
+            if (!phone) {
+                alert("Vui lòng điền Số điện thoại!");
                 return;
             }
             
