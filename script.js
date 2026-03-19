@@ -1,9 +1,9 @@
-// Firebase Configuration (Compat version)
 const firebaseConfig = {
-  apiKey: "AIzaSyDJsvWI-J9pc-JhzheR_C4xQXhCNbWDnFI",
-  authDomain: "project-course-985d2.firebaseapp.com",
-  projectId: "project-course-985d2",
-  storageBucket: "project-course-985d2.firebasestorage.app",
+  apiKey: "AIzaSyDSm7h3_I5rG7X_P4H5F6G7H8I9J0K1L2M",
+  authDomain: "test-techcamp-d0a1b.firebaseapp.com",
+  databaseURL: "https://test-techcamp-d0a1b-default-rtdb.firebaseio.com",
+  projectId: "test-techcamp-d0a1b",
+  storageBucket: "test-techcamp-d0a1b.appspot.com",
   messagingSenderId: "332733702113",
   appId: "1:332733702113:web:fa1503e178361455d83ca0",
   measurementId: "G-SG3NJ1FHXG"
