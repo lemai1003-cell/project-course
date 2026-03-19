@@ -84,8 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const googleUserEmail    = document.getElementById('googleUserEmail');
     const googleLogoutBtn    = document.getElementById('googleLogoutBtn');
 
-    const loginStatus        = document.getElementById('loginStatus');
-
     window.handleGoogleLoginCTA = (response) => {
         const base64Url = response.credential.split('.')[1];
         const base64   = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -98,9 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Auto-fill email field
         if (emailField) emailField.value = payload.email;
 
-        // Cập nhật giao diện: Hiện badge người dùng, ẩn nút google và trạng thái "Chưa đăng nhập"
+        // Cập nhật giao diện: Hiện badge người dùng, ẩn nút google
         if (googleBtnContainer) googleBtnContainer.classList.add('hidden');
-        if (loginStatus) loginStatus.classList.add('hidden');
         if (googleUserInfo) googleUserInfo.classList.remove('hidden');
         
         googleUserAvatar.src = payload.picture;
@@ -111,11 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.google && googleBtnContainer) {
             google.accounts.id.initialize({
                 client_id: GOOGLE_CLIENT_ID,
-                callback: handleGoogleLoginCTA
+                callback: handleGoogleLoginCTA,
+                auto_select: false // Tắt tự động chọn tài khoản (để ko hiện email)
             });
             google.accounts.id.renderButton(
                 googleBtnContainer,
-                { theme: "outline", size: "large", shape: "pill", width: "260" }
+                { theme: "outline", size: "large", shape: "pill", width: "260", text: "continue_with" }
             );
         }
     }, 600);
@@ -124,10 +122,16 @@ document.addEventListener('DOMContentLoaded', () => {
         googleLogoutBtn.addEventListener('click', () => {
             if (googleUserInfo) googleUserInfo.classList.add('hidden');
             if (googleBtnContainer) googleBtnContainer.classList.remove('hidden');
-            if (loginStatus) loginStatus.classList.remove('hidden');
             
             if (emailField) emailField.value = '';
-            if (window.google) google.accounts.id.disableAutoSelect();
+            if (window.google) {
+                google.accounts.id.disableAutoSelect(); // Đăng xuất
+                // Render lại nút google để đảm bảo ko còn cache session
+                google.accounts.id.renderButton(
+                    googleBtnContainer,
+                    { theme: "outline", size: "large", shape: "pill", width: "260", text: "continue_with" }
+                );
+            }
         });
     }
 
