@@ -170,11 +170,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================================
-    // ĐĂNG KÝ Button → Open new tab
+    // ĐĂNG KÝ Button → Open new tab with parameters
     // ============================================
     if (dangkyBtn) {
         dangkyBtn.addEventListener('click', () => {
-            window.open('https://test-techcamp.vercel.app/', '_blank');
+            const email = emailField ? emailField.value.trim() : '';
+            const phone = phoneField ? phoneField.value.trim() : '';
+            
+            // Chuyển hướng kèm theo dữ liệu
+            const targetUrl = `https://test-techcamp.vercel.app/?at_email=${encodeURIComponent(email)}&at_phone=${encodeURIComponent(phone)}`;
+            window.open(targetUrl, '_blank');
         });
     }
 
