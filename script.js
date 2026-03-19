@@ -74,15 +74,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (phoneField) phoneField.addEventListener('input', updateButtonState);
     updateButtonState();
 
-    // 3. Google Login logic
+    // 3. Google Login logic với giải mã an toàn
     window.handleGoogleLoginCTA = (response) => {
-        const payload = JSON.parse(atob(response.credential.split('.')[1]));
-        if (emailField) emailField.value = payload.email;
-        if (googleCustomBtn) googleCustomBtn.classList.add('hidden');
-        if (googleUserInfo) googleUserInfo.classList.remove('hidden');
-        googleUserAvatar.src = payload.picture;
-        googleUserEmail.textContent = payload.email;
-        updateButtonState();
+        try {
+            const base64Url = response.credential.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const payload = JSON.parse(decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+            
+            if (emailField) emailField.value = payload.email;
+            if (googleCustomBtn) googleCustomBtn.classList.add('hidden');
+            if (googleUserInfo) googleUserInfo.classList.remove('hidden');
+            if (googleUserAvatar) googleUserAvatar.src = payload.picture;
+            if (googleUserEmail) googleUserEmail.textContent = payload.email;
+            updateButtonState();
+        } catch (e) { console.error("Login Error:", e); }
     };
 
     setTimeout(() => {
@@ -91,17 +96,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 client_id: "336018277787-0prgo2k750aft6678cdeioqgptic9kq3.apps.googleusercontent.com",
                 callback: handleGoogleLoginCTA
             });
-            google.accounts.id.renderButton(googleBtnContainer, { type: "icon", shape: "circle" });
+            // Vẽ nút dạng icon nhỏ (Bên trong nút custom của bạn)
+            google.accounts.id.renderButton(googleBtnContainer, { theme: "outline", size: "large", type: "icon", shape: "circle" });
         }
-    }, 600);
+    }, 800);
 
-    if (googleCustomBtn) googleCustomBtn.addEventListener('click', () => google.accounts.id.prompt());
-    if (googleLogoutBtn) googleLogoutBtn.addEventListener('click', () => {
-        googleUserInfo.classList.add('hidden');
-        googleCustomBtn.classList.remove('hidden');
-        if (emailField) emailField.value = '';
-        updateButtonState();
-    });
+    // QUAN TRỌNG: Kích hoạt nút bấm chính
+    if (googleCustomBtn) {
+        googleCustomBtn.addEventListener('click', () => {
+            if (window.google) google.accounts.id.prompt();
+        });
+    }
+
+    if (googleLogoutBtn) {
+        googleLogoutBtn.addEventListener('click', () => {
+            if (googleUserInfo) googleUserInfo.classList.add('hidden');
+            if (googleCustomBtn) googleCustomBtn.classList.remove('hidden');
+            if (emailField) emailField.value = '';
+            updateButtonState();
+        });
+    }
 
     // 4. Submit TƯ VẤN (Sử dụng Realtime Database)
     if (tuvanBtn) {
