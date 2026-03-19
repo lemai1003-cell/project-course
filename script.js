@@ -84,6 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const googleUserEmail    = document.getElementById('googleUserEmail');
     const googleLogoutBtn    = document.getElementById('googleLogoutBtn');
 
+    const googleCustomBtn = document.getElementById('googleCustomBtn');
+
     window.handleGoogleLoginCTA = (response) => {
         const base64Url = response.credential.split('.')[1];
         const base64   = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -97,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (emailField) emailField.value = payload.email;
 
         // Cập nhật giao diện: Hiện badge người dùng, ẩn nút google
-        if (googleBtnContainer) googleBtnContainer.classList.add('hidden');
+        if (googleCustomBtn) googleCustomBtn.classList.add('hidden');
         if (googleUserInfo) googleUserInfo.classList.remove('hidden');
         
         googleUserAvatar.src = payload.picture;
@@ -110,35 +112,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 client_id: GOOGLE_CLIENT_ID,
                 callback: handleGoogleLoginCTA,
                 auto_select: false,
-                itp_support: true, // Hỗ trợ bảo mật ITP để tránh cache thông tin cá nhân
-                use_fedcm_for_prompt: true // Sử dụng UI mới của trình duyệt để ẩn email
+                itp_support: true
             });
+            // Vẽ nút dạng ICON (Để Google không thể tự ý nhét email vào)
             google.accounts.id.renderButton(
                 googleBtnContainer,
-                { 
-                    theme: "outline", 
-                    size: "large", 
-                    shape: "pill", 
-                    width: "260", 
-                    text: "signin_with", // Dùng chữ "Sign in with Google" (ít bị cá nhân hóa hơn)
-                    logo_alignment: "left"
-                }
+                { theme: "outline", size: "large", shape: "circle", type: "icon" }
             );
         }
     }, 600);
 
+    // Kích hoạt click cho phần vỏ bọc bên ngoài
+    if (googleCustomBtn) {
+        googleCustomBtn.addEventListener('click', () => {
+            // Khi nhấn vào vỏ, ta yêu cầu Google hiện popup chọn tài khoản
+            if (window.google) google.accounts.id.prompt();
+        });
+    }
+
     if (googleLogoutBtn) {
         googleLogoutBtn.addEventListener('click', () => {
             if (googleUserInfo) googleUserInfo.classList.add('hidden');
-            if (googleBtnContainer) googleBtnContainer.classList.remove('hidden');
+            if (googleCustomBtn) googleCustomBtn.classList.remove('hidden');
             
             if (emailField) emailField.value = '';
             if (window.google) {
                 google.accounts.id.disableAutoSelect(); // Đăng xuất
-                // Render lại nút google để đảm bảo ko còn cache session
+                // Render lại nút icon
                 google.accounts.id.renderButton(
                     googleBtnContainer,
-                    { theme: "outline", size: "large", shape: "pill", width: "260", text: "continue_with" }
+                    { theme: "outline", size: "large", shape: "circle", type: "icon" }
                 );
             }
         });

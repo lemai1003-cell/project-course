@@ -880,13 +880,29 @@ section[id] {
     margin-bottom: 12px;
 }
 
-.login-status-msg {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    background: rgba(0, 0, 0, 0.05);
-    padding: 6px 14px;
+.custom-google-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #dadce0;
     border-radius: 50px;
-    border: 1px dashed rgba(0, 0, 0, 0.2);
+    padding: 0 16px 0 0; /* Bỏ padding trái vì nút icon Google đã có sẵn */
+    cursor: pointer;
+    transition: background 0.2s;
+    height: 48px;
+}
+
+.custom-google-wrapper:hover {
+    background: #f8f9fa;
+    border-color: #d2d2d2;
+}
+
+.custom-google-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #3c4043;
 }
 
 #googleUserInfo {
