@@ -20,7 +20,7 @@ const TELEGRAM_CHAT_ID = '644667498';
 
 async function sendTelegramNotification(email, phone, totalCount) {
     const message =
-        `🔔 Có học viên yêu cầu tư vấn!\n\n` +
+        `🔔 Có học viên yêu cầu TƯ VẤN!\n\n` +
         `📧 Email: ${email || 'Chưa nhập'}\n` +
         `📞 SĐT: ${phone || 'Chưa nhập'}\n` +
         `👥 Tổng yêu cầu: ${totalCount}`;
