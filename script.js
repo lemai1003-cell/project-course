@@ -22,8 +22,8 @@ const db = firebase.firestore();
 // ============================================
 // TELEGRAM CONFIG
 // ============================================
-const TELEGRAM_BOT_TOKEN = '8601457526:AAEDpglDCgTX_qBoRDWNddVXK4MR-IS4AwE';
-const TELEGRAM_CHAT_ID = '644667498';
+const TELEGRAM_BOT_TOKEN = '7292150917:AAEvL-C_1zX6VpGvK6ZfC27q7a75G9-f7i4';
+const TELEGRAM_CHAT_ID = '-5207532142';
 
 async function sendTelegramNotification(email, phone, totalCount) {
     const message =
