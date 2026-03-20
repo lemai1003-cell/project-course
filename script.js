@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 await tuvanRef.push({
                     email, 
                     phone, 
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                    timestamp: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' })
                 });
                 console.log("✅ Dữ liệu đã được gởi lên Firebase.");
 
