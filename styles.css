@@ -153,19 +153,6 @@ section[id] {
     transition: background 0.3s ease;
 }
 
-/* Navbar on dark/gradient background (e.g. contact section) */
-.navbar.on-dark-bg .nav-links a:not(.btn-primary) {
-    color: rgba(255, 255, 255, 0.92);
-}
-
-.navbar.on-dark-bg .nav-links a:not(.btn-primary):hover {
-    color: #ffffff;
-}
-
-.navbar.on-dark-bg .logo {
-    color: rgba(255, 255, 255, 0.92);
-}
-
 .navbar.scrolled {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -201,7 +188,6 @@ section[id] {
 .nav-links a {
     font-weight: 500;
     color: var(--text-muted);
-    transition: color 0.3s ease;
 }
 
 .nav-links a:hover,
