@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // TIMEOUT PROTECTOR: Sau 7 giây sẽ tự thoát nếu bị treo
             const timeout = setTimeout(() => {
-                alert("Lỗi: Quá thời gian chờ (Timeout). Hãy kiểm tra Rules của Firebase Database!");
+                Swal.fire('Lỗi', 'Quá thời gian chờ (Timeout). Hãy kiểm tra Rules của Firebase Database!', 'error');
                 tuvanBtn.disabled = false;
                 tuvanBtn.textContent = 'TƯ VẤN';
             }, 7000);
@@ -145,11 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Gửi Telegram (không chờ bản tin này xong)
                 sendTelegramNotification(email, phone, total);
 
-                alert('Gửi tư vấn thành công! Chúng tôi sẽ liên hệ bạn.');
+                Swal.fire('Thông báo', 'Gửi tư vấn thành công! Chúng tôi sẽ liên hệ bạn.', 'success');
             } catch (error) {
                 clearTimeout(timeout);
                 console.error("❌ Lỗi hệ thống:", error);
-                alert('Có lỗi xảy ra: ' + error.message);
+                Swal.fire('Lỗi', 'Có lỗi xảy ra: ' + error.message, 'error');
             } finally {
                 tuvanBtn.disabled = false;
                 tuvanBtn.textContent = 'TƯ VẤN';
