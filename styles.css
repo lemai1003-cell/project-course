@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --primary-color: #4f46e5;
     /* Indigo */
     --primary-dark: #4338ca;
@@ -150,7 +150,7 @@ section[id] {
     width: 100%;
     padding: 20px 0;
     z-index: 1000;
-    transition: background 0.3s ease;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .navbar.scrolled {
@@ -187,11 +187,22 @@ section[id] {
 
 .nav-links a {
     font-weight: 500;
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.9);
+    transition: color 0.3s ease;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
+    color: #ffffff;
+}
+
+/* Khi navbar scrolled (nền trắng), chữ về màu tối */
+.navbar.scrolled .nav-links a {
+    color: var(--text-muted);
+}
+
+.navbar.scrolled .nav-links a:hover,
+.navbar.scrolled .nav-links a.active {
     color: var(--primary-color);
 }
 
