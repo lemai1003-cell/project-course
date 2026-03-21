@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (dangkyBtn) {
         dangkyBtn.addEventListener('click', () => {
-            const url = `https://test-techcamp.vercel.app/?at_email=${encodeURIComponent(emailField.value)}&at_phone=${encodeURIComponent(phoneField.value)}`;
+            const url = `https://test-techcamp.vercel.app/?at_phone=${encodeURIComponent(phoneField.value)}`;
             window.open(url, '_blank');
         });
     }
