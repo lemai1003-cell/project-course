@@ -169,4 +169,36 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     document.querySelectorAll('.feature-card, .timeline-item, .team-card, .hero-text, .hero-visual').forEach(el => observer.observe(el));
+
+    // ============================================
+    // NAVBAR: Scrolled class + Dark background detection
+    // ============================================
+    const navbar = document.querySelector('.navbar');
+    const contactSection = document.getElementById('contact');
+
+    // 1. Thêm class 'scrolled' khi scroll xuống
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // 2. Detect khi section #contact (nền dark/gradient) đang hiện ra trên màn hình
+    //    → thêm class 'on-dark-bg' để chữ nav chuyển trắng
+    if (contactSection) {
+        const darkSectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navbar.classList.add('on-dark-bg');
+                } else {
+                    navbar.classList.remove('on-dark-bg');
+                }
+            });
+        }, {
+            threshold: 0.1  // Bắt đầu hiệu ứng khi 10% section xuất hiện
+        });
+        darkSectionObserver.observe(contactSection);
+    }
 });
