@@ -309,7 +309,7 @@
             <div class="cta-content">
                 <h2>SẴN SÀNG BỨT PHÁ SỰ NGHIỆP BA NGAY HÔM NAY</h2>
                 <p>ĐĂNG KÝ NGAY HÔM NAY ĐỂ NHẬN ƯU ĐÃI</p>
-                <form class="signup-form" id="signupForm">
+                <form class="signup-form" id="signupForm" onsubmit="event.preventDefault();">
                     <!-- Google Sign-In to auto-fill email -->
                     <div class="google-autofill-row">
                         <div class="custom-google-wrapper" id="googleCustomBtn">
@@ -324,11 +324,11 @@
                     </div>
                     <!-- Email input (always visible, auto-filled by Google) -->
                     <div class="form-group">
-                        <input type="email" name="email" id="emailField" placeholder="📧 Email của bạn" required>
+                        <input type="email" id="emailField" placeholder="📧 Email của bạn" required>
                     </div>
                     <!-- Phone input (always visible) -->
                     <div class="form-group">
-                        <input type="tel" name="phone" id="phoneField" placeholder="📞 Số điện thoại" required>
+                        <input type="tel" id="phoneField" placeholder="📞 Số điện thoại" required>
                     </div>
                     <!-- Action buttons -->
                     <div class="cta-buttons">
